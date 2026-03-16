@@ -11,10 +11,14 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.post('/', upload.fields([
   { name: 'resume', maxCount: 1 },
   { name: 'jobDescriptionFile', maxCount: 1 },
+  { name: 'companyContextFile', maxCount: 1 },
+  { name: 'linkedInFile', maxCount: 1 },
 ]), async (req, res, next) => {
   try {
     const resumeFile = req.files?.resume?.[0];
     const jdFile = req.files?.jobDescriptionFile?.[0];
+    const companyContextFile = req.files?.companyContextFile?.[0];
+    const linkedInFile = req.files?.linkedInFile?.[0];
     const jdText = req.body.jobDescriptionText || '';
     const linkedInText = req.body.linkedInText || '';
     const companyContext = req.body.companyContext || '';
@@ -28,8 +32,10 @@ router.post('/', upload.fields([
 
     const resumeText = await extractText(resumeFile.buffer);
     const jobDescText = jdFile ? await extractText(jdFile.buffer) : jdText.trim();
+    const resolvedCompanyContext = companyContextFile ? await extractText(companyContextFile.buffer) : companyContext;
+    const resolvedLinkedInText = linkedInFile ? await extractText(linkedInFile.buffer) : linkedInText;
 
-    const data = await generateQuestions(resumeText, jobDescText, linkedInText, companyContext);
+    const data = await generateQuestions(resumeText, jobDescText, resolvedLinkedInText, resolvedCompanyContext);
 
     const session = {
       id: uuidv4(),

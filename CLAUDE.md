@@ -35,10 +35,14 @@ Monorepo with two independent `package.json` packages — `server/` (Express, ES
 ```
 Browser → POST /api/generate (multipart/form-data)
   → multer (memoryStorage — PDFs never touch disk)
+  │   fields: resume, jobDescriptionFile, companyContextFile, linkedInFile
   → pdfParser.extractText(buffer)        [truncates at 8,000 chars each]
+  │   PDF fields take priority over their text body counterparts
   → promptBuilder.buildMessages(...)     [system prompt + user message]
-  → claudeClient.generateQuestions(...)  [claude-sonnet-4-6, max_tokens 8192]
+  │   companyContext block injected before linkedIn block when present
+  → claudeClient.generateQuestions(...)  [claude-sonnet-4-6, max_tokens 16000]
   → JSON validated (5 categories × 7 questions)
+  │   stop_reason === 'max_tokens' detected and surfaced as a 422 error
   → session saved to server/storage/sessions/{uuid}.json
   → full session JSON returned to client
 ```
@@ -57,7 +61,7 @@ Zustand store at `client/src/store/appStore.js` is the single source of truth. V
 
 ### Claude prompt contract
 
-The system prompt in `server/services/promptBuilder.js` enforces strict JSON-only output with exactly 5 ordered categories and 7 questions each. Question IDs follow the pattern `B1-B7`, `T1-T7`, `L1-L7`, `R1-R7`, `C1-C7`. The server validates this shape after parsing and throws HTTP 422 on failure (the UI shows a Retry button). The LinkedIn hiring manager text is conditionally appended to the user message when provided.
+The system prompt in `server/services/promptBuilder.js` enforces strict JSON-only output with exactly 5 ordered categories and 7 questions each. Question IDs follow the pattern `B1-B7`, `T1-T7`, `L1-L7`, `R1-R7`, `C1-C7`. The server validates this shape after parsing and throws HTTP 422 on failure (the UI shows a Retry button). Two optional context blocks are conditionally appended to the user message: company context (injected first, targets Culture Fit and Role-Specific questions) and hiring manager profile (injected second, adjusts framing and tone). Both accept either pasted text or an uploaded PDF.
 
 ### Environment
 
