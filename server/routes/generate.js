@@ -1,0 +1,49 @@
+import express from 'express';
+import multer from 'multer';
+import { v4 as uuidv4 } from 'uuid';
+import { extractText } from '../services/pdfParser.js';
+import { generateQuestions } from '../services/claudeClient.js';
+import { saveSession } from '../routes/sessions.js';
+
+const router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
+
+router.post('/', upload.fields([
+  { name: 'resume', maxCount: 1 },
+  { name: 'jobDescriptionFile', maxCount: 1 },
+]), async (req, res, next) => {
+  try {
+    const resumeFile = req.files?.resume?.[0];
+    const jdFile = req.files?.jobDescriptionFile?.[0];
+    const jdText = req.body.jobDescriptionText || '';
+    const linkedInText = req.body.linkedInText || '';
+
+    if (!resumeFile) {
+      return res.status(400).json({ error: 'Resume PDF is required.' });
+    }
+    if (!jdFile && !jdText.trim()) {
+      return res.status(400).json({ error: 'Job description is required (either upload a PDF or paste text).' });
+    }
+
+    const resumeText = await extractText(resumeFile.buffer);
+    const jobDescText = jdFile ? await extractText(jdFile.buffer) : jdText.trim();
+
+    const data = await generateQuestions(resumeText, jobDescText, linkedInText);
+
+    const session = {
+      id: uuidv4(),
+      roleTitle: data.roleTitle || 'Target Role',
+      company: data.company || 'Target Company',
+      createdAt: new Date().toISOString(),
+      resumeSnapshot: resumeText.slice(0, 500),
+      categories: data.categories,
+    };
+
+    await saveSession(session);
+    res.json(session);
+  } catch (err) {
+    next(err);
+  }
+});
+
+export default router;
