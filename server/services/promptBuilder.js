@@ -36,10 +36,15 @@ Rules:
 6. Question IDs: use the format "B1"-"B7" for Behavioral, "T1"-"T7" for Technical, "L1"-"L7" for Leadership, "R1"-"R7" for Role-Specific, "C1"-"C7" for Culture Fit.
 7. If the company name is not identifiable from the job description, use "Target Company".
 8. If the role title is not identifiable, use "Target Role".
-9. If a hiring manager profile is provided: adjust question framing, tone, and emphasis to reflect that person's background, domain focus, and likely priorities.`;
+9. If a hiring manager profile is provided: adjust question framing, tone, and emphasis to reflect that person's background, domain focus, and likely priorities.
+10. If company context is provided: use it to inform Culture Fit and Role-Specific questions, weave in the company's mission, values, products, or challenges where relevant, and reflect the company's stage and culture in behavioral question framing.`;
 
-export function buildMessages(resumeText, jdText, linkedInText = '') {
+export function buildMessages(resumeText, jdText, linkedInText = '', companyContext = '') {
   let userContent = `CANDIDATE RESUME:\n---\n${resumeText}\n---\n\nJOB DESCRIPTION:\n---\n${jdText}\n---`;
+
+  if (companyContext.trim()) {
+    userContent += `\n\nCOMPANY CONTEXT:\n---\n${companyContext.trim()}\n---\nUse this to inform Culture Fit and Role-Specific questions. Reflect the company's mission, values, products, stage, and culture throughout the guide where relevant.`;
+  }
 
   if (linkedInText.trim()) {
     userContent += `\n\nHIRING MANAGER PROFILE (LinkedIn):\n---\n${linkedInText.trim()}\n---\nUse this profile to infer their background, domain expertise, and what they likely value in a candidate. Tailor question framing and emphasis accordingly.`;

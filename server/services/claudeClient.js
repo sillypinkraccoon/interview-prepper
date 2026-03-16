@@ -2,7 +2,6 @@ import Anthropic from '@anthropic-ai/sdk';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const EXPECTED_CATEGORIES = ['Behavioral', 'Technical & Product Skills', 'Leadership & Strategy', 'Role-Specific', 'Culture Fit'];
 const EXPECTED_Q_COUNT = 7;
 
 function parseResponse(text) {
@@ -30,9 +29,9 @@ function parseResponse(text) {
   return data;
 }
 
-export async function generateQuestions(resumeText, jdText, linkedInText) {
+export async function generateQuestions(resumeText, jdText, linkedInText, companyContext) {
   const { buildMessages } = await import('./promptBuilder.js');
-  const { system, messages } = buildMessages(resumeText, jdText, linkedInText);
+  const { system, messages } = buildMessages(resumeText, jdText, linkedInText, companyContext);
 
   const response = await client.messages.create({
     model: 'claude-sonnet-4-6',
