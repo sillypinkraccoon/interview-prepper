@@ -17,6 +17,7 @@ router.post('/', upload.fields([
     const jdFile = req.files?.jobDescriptionFile?.[0];
     const jdText = req.body.jobDescriptionText || '';
     const linkedInText = req.body.linkedInText || '';
+    const companyContext = req.body.companyContext || '';
 
     if (!resumeFile) {
       return res.status(400).json({ error: 'Resume PDF is required.' });
@@ -28,7 +29,7 @@ router.post('/', upload.fields([
     const resumeText = await extractText(resumeFile.buffer);
     const jobDescText = jdFile ? await extractText(jdFile.buffer) : jdText.trim();
 
-    const data = await generateQuestions(resumeText, jobDescText, linkedInText);
+    const data = await generateQuestions(resumeText, jobDescText, linkedInText, companyContext);
 
     const session = {
       id: uuidv4(),

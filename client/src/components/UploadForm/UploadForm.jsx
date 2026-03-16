@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import useAppStore from '../../store/appStore.js';
 import { generateSession, listSessions } from '../../api/client.js';
 
@@ -13,6 +13,8 @@ export default function UploadForm() {
   const [company, setCompany] = useState('');
   const [linkedInText, setLinkedInText] = useState('');
   const [linkedInOpen, setLinkedInOpen] = useState(false);
+  const [companyContext, setCompanyContext] = useState('');
+  const [companyContextOpen, setCompanyContextOpen] = useState(false);
 
   async function submit(e) {
     e?.preventDefault();
@@ -30,6 +32,7 @@ export default function UploadForm() {
       fd.append('jobDescriptionText', jdText);
     }
 
+    if (companyContext.trim()) fd.append('companyContext', companyContext);
     if (linkedInText.trim()) fd.append('linkedInText', linkedInText);
     setLastFormData(fd);
 
@@ -135,6 +138,32 @@ export default function UploadForm() {
               </div>
             </div>
           )}
+
+          {/* Company Context collapsible */}
+          <div className="collapsible-section">
+            <button
+              type="button"
+              className="collapsible-trigger"
+              aria-expanded={companyContextOpen}
+              onClick={() => setCompanyContextOpen(o => !o)}
+            >
+              <span>🏢 Add Company Context <span style={{fontWeight:400,color:'#94a3b8',fontSize:'12px'}}>(optional)</span></span>
+              <span className="collapsible-chevron">▼</span>
+            </button>
+            {companyContextOpen && (
+              <div className="collapsible-body">
+                <p className="collapsible-hint">
+                  Paste anything useful about the company — their mission, recent news, products, strategy, culture, or challenges. Claude will use this to sharpen Culture Fit and Role-Specific questions.
+                </p>
+                <textarea
+                  placeholder="e.g. Company mission, values, recent product launches, funding stage, known challenges..."
+                  value={companyContext}
+                  onChange={e => setCompanyContext(e.target.value)}
+                  rows={5}
+                />
+              </div>
+            )}
+          </div>
 
           {/* LinkedIn collapsible */}
           <div className="collapsible-section">
