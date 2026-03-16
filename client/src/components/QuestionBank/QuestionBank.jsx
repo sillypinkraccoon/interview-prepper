@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useAppStore from '../../store/appStore.js';
-import { exportSession } from '../../api/client.js';
+import { exportSession, generateAnswer } from '../../api/client.js';
 
 export default function QuestionBank() {
-  const { currentSession, activeCategoryIndex, setActiveCategoryIndex, isExporting, setExporting, startNewSession } = useAppStore();
+  const { currentSession, activeCategoryIndex, setActiveCategoryIndex, isExporting, setExporting, startNewSession, answers, setAnswer } = useAppStore();
   const { id, roleTitle, company, createdAt, categories } = currentSession;
+
+  const [generatingId, setGeneratingId] = useState(null);
+  const [answerError, setAnswerError] = useState(null);
 
   async function handleExport() {
     setExporting(true);
@@ -15,6 +18,19 @@ export default function QuestionBank() {
       alert(`Export failed: ${err.message}`);
     } finally {
       setExporting(false);
+    }
+  }
+
+  async function handleGenerateAnswer(questionId) {
+    setGeneratingId(questionId);
+    setAnswerError(null);
+    try {
+      const { answer } = await generateAnswer(id, questionId);
+      setAnswer(questionId, answer);
+    } catch (err) {
+      setAnswerError(err.message);
+    } finally {
+      setGeneratingId(null);
     }
   }
 
@@ -47,6 +63,13 @@ export default function QuestionBank() {
         ))}
       </div>
 
+      {answerError && (
+        <div className="error-banner" style={{margin: '0 0 16px'}}>
+          <span>⚠️</span>
+          <div>{answerError}</div>
+        </div>
+      )}
+
       <div className="question-list">
         {activeCategory.questions.map(q => (
           <details key={q.id} className="question-card">
@@ -67,6 +90,29 @@ export default function QuestionBank() {
                     <span key={kw} className="keyword-tag">{kw}</span>
                   ))}
                 </div>
+              </div>
+              <div className="answer-guide-section">
+                <div className="guide-label">Sample Answer</div>
+                {answers[q.id] ? (
+                  <div>
+                    <p className="guide-description" style={{whiteSpace: 'pre-wrap'}}>{answers[q.id]}</p>
+                    <button
+                      className="sample-answer-btn regenerate"
+                      onClick={() => handleGenerateAnswer(q.id)}
+                      disabled={generatingId !== null}
+                    >
+                      {generatingId === q.id ? '⏳ Generating...' : '↺ Regenerate'}
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    className="sample-answer-btn"
+                    onClick={() => handleGenerateAnswer(q.id)}
+                    disabled={generatingId !== null}
+                  >
+                    {generatingId === q.id ? '⏳ Generating...' : '✦ Generate Sample Answer'}
+                  </button>
+                )}
               </div>
             </div>
           </details>

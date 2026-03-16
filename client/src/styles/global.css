@@ -569,6 +569,30 @@ textarea { resize: vertical; min-height: 100px; }
   border-radius: 20px;
 }
 
+/* Sample answer button */
+.sample-answer-btn {
+  margin-top: 10px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.sample-answer-btn:hover:not(:disabled) { background: #dbeafe; }
+.sample-answer-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.sample-answer-btn.regenerate {
+  font-size: 12px;
+  padding: 5px 12px;
+  background: transparent;
+  color: var(--text-muted);
+  border-color: #e2e8f0;
+}
+.sample-answer-btn.regenerate:hover:not(:disabled) { background: #f8fafc; }
+
 /* New session prompt */
 .new-session-prompt {
   max-width: 680px;

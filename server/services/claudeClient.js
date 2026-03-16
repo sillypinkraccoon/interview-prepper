@@ -2,7 +2,7 @@ import Anthropic from '@anthropic-ai/sdk';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const EXPECTED_Q_COUNT = 7;
+const EXPECTED_Q_COUNT = 5;
 
 function parseResponse(text) {
   // Strip markdown fences if present

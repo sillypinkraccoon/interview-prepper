@@ -10,9 +10,11 @@ const useAppStore = create((set) => ({
   lastFormData: null, // for retry
   activeCategoryIndex: 0,
   isExporting: false,
+  answers: {}, // { [questionId]: string }
 
   setView: (view) => set({ view }),
-  setCurrentSession: (session) => set({ currentSession: session, view: 'results', activeCategoryIndex: 0 }),
+  setCurrentSession: (session) => set({ currentSession: session, view: 'results', activeCategoryIndex: 0, answers: session.answers || {} }),
+  setAnswer: (questionId, text) => set(state => ({ answers: { ...state.answers, [questionId]: text } })),
   setSessions: (sessions) => set({ sessions }),
   setGenerating: (isGenerating) => set({ isGenerating }),
   setGenerateError: (generateError) => set({ generateError }),

@@ -2,16 +2,17 @@
 
 Interview Prep Studio is an AI-powered local web app designed to help job seekers — particularly those targeting product management roles — prepare for interviews in a personalized, structured way.
 
-You provide two inputs: your resume (PDF) and a job description (pasted text or PDF). The app uses Claude to generate 35 tailored interview questions across five categories: **Behavioral**, **Technical & Product Skills**, **Leadership & Strategy**, **Role-Specific**, and **Culture Fit**. Each question comes with a collapsible answer guide showing what a strong response looks like and the specific keywords and themes to hit — giving you both a question bank and a coaching layer in one place.
+You provide two inputs: your resume (PDF) and a job description (pasted text or PDF). The app uses Claude to generate 25 tailored interview questions across five categories: **Behavioral**, **Technical & Product Skills**, **Leadership & Strategy**, **Role-Specific**, and **Culture Fit**. Each question comes with a collapsible answer guide showing what a strong response looks like and the specific keywords and themes to hit — giving you both a question bank and a coaching layer in one place.
 
 ## Features
 
-- **35 tailored questions** generated from your actual resume and the specific job description — not generic templates
+- **25 tailored questions** generated from your actual resume and the specific job description — not generic templates
 - **Answer guides** for every question: what the hiring manager wants to hear + keywords to weave in
+- **Sample answers** — generate a resume-grounded sample answer for any question on demand; answers are saved to your session so you never regenerate the same one twice
 - **Company context** — paste or upload a PDF of company info (mission, values, news, culture) to sharpen Culture Fit and Role-Specific questions
 - **Hiring manager context** — paste or upload a PDF of the hiring manager's LinkedIn profile to personalize question framing and tone
 - **Session history** — sessions are saved locally so you can revisit prep for different roles
-- **Export to .docx** — download a formatted Word document with all questions and answer guides organized by category
+- **Export to .docx** — download a formatted Word document with all questions, answer guides, and any sample answers you generated
 
 ## API
 
@@ -61,8 +62,9 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 5. Optionally expand **Add Hiring Manager Context** and paste or upload a PDF of the hiring manager's LinkedIn profile — open their profile, select all, copy, paste (or save as PDF)
 6. Click **Generate** and wait ~30 seconds while Claude analyzes your inputs
 7. **Browse by category tab** — click any question to expand its answer guide
-8. Click **Export .docx** to download the full question bank as a formatted Word document
-9. Previous sessions appear in the left sidebar — click any to reload it, or start a new one
+8. Optionally click **Generate Sample Answer** on any question to get a resume-grounded sample response; click **Regenerate** to get a fresh version
+9. Click **Export .docx** to download the full question bank — includes any sample answers you generated
+10. Previous sessions appear in the left sidebar — click any to reload it, or start a new one
 
 ## Production Build
 

@@ -8,7 +8,7 @@ function LoadingView() {
   return (
     <div className="loading-overlay">
       <div className="spinner" />
-      <div className="loading-text">Generating your 35 interview questions...</div>
+      <div className="loading-text">Generating your interview questions...</div>
       <div className="loading-subtext">Claude is analyzing your resume and the job description. This takes 20–40 seconds.</div>
     </div>
   );

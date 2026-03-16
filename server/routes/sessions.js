@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import { existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { generateAnswer } from '../services/answerGenerator.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SESSIONS_DIR = join(__dirname, '..', 'storage', 'sessions');
@@ -45,6 +46,41 @@ router.get('/:id', async (req, res, next) => {
     if (!existsSync(path)) return res.status(404).json({ error: 'Session not found.' });
     const raw = await fs.readFile(path, 'utf-8');
     res.json(JSON.parse(raw));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/sessions/:id/answers/:questionId — generate (or return cached) sample answer
+router.post('/:id/answers/:questionId', async (req, res, next) => {
+  try {
+    const path = sessionPath(req.params.id);
+    if (!existsSync(path)) return res.status(404).json({ error: 'Session not found.' });
+
+    const session = JSON.parse(await fs.readFile(path, 'utf-8'));
+    const { questionId } = req.params;
+
+    // Return cached answer if it already exists
+    if (session.answers?.[questionId]) {
+      return res.json({ answer: session.answers[questionId] });
+    }
+
+    // Find the question across all categories
+    let question = null;
+    for (const cat of session.categories) {
+      question = cat.questions.find(q => q.id === questionId);
+      if (question) break;
+    }
+    if (!question) return res.status(404).json({ error: 'Question not found.' });
+
+    const answer = await generateAnswer(session, question);
+
+    // Persist the answer to the session file
+    if (!session.answers) session.answers = {};
+    session.answers[questionId] = answer;
+    await fs.writeFile(path, JSON.stringify(session, null, 2), 'utf-8');
+
+    res.json({ answer });
   } catch (err) {
     next(err);
   }

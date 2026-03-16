@@ -59,7 +59,7 @@ export default function UploadForm() {
   return (
     <div className="upload-form">
       <h1 className="page-title">Interview Prep Studio</h1>
-      <p className="page-subtitle">Upload your resume and job description to generate 35 tailored interview questions.</p>
+      <p className="page-subtitle">Upload your resume and job description to generate 25 tailored interview questions.</p>
 
       {generateError && (
         <div className="error-banner">
@@ -228,7 +228,7 @@ export default function UploadForm() {
         </div>
 
         <button type="submit" className="submit-btn">
-          Generate 35 Interview Questions →
+          Generate 25 Interview Questions →
         </button>
       </form>
     </div>

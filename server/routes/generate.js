@@ -43,7 +43,10 @@ router.post('/', upload.fields([
       company: data.company || 'Target Company',
       createdAt: new Date().toISOString(),
       resumeSnapshot: resumeText.slice(0, 500),
+      resumeContext: resumeText.slice(0, 6000),
+      jdContext: jobDescText.slice(0, 4000),
       categories: data.categories,
+      answers: {},
     };
 
     await saveSession(session);

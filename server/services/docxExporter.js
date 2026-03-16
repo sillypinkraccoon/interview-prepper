@@ -65,7 +65,7 @@ function bulletItem(text) {
 }
 
 export async function generateDocx(session) {
-  const { roleTitle, company, createdAt, categories } = session;
+  const { roleTitle, company, createdAt, categories, answers = {} } = session;
   const date = new Date(createdAt).toLocaleDateString('en-US', {
     year: 'numeric', month: 'long', day: 'numeric',
   });
@@ -81,6 +81,10 @@ export async function generateDocx(session) {
       children.push(bodyText(q.answerGuide.strongResponseDescription));
       children.push(sectionLabel('Keywords & Themes to Hit'));
       q.answerGuide.keywordsAndThemes.forEach(kw => children.push(bulletItem(kw)));
+      if (answers[q.id]) {
+        children.push(sectionLabel('Sample Answer'));
+        children.push(bodyText(answers[q.id]));
+      }
     });
   });
 

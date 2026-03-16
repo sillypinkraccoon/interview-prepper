@@ -29,11 +29,11 @@ Rules:
    - "Leadership & Strategy"
    - "Role-Specific"
    - "Culture Fit"
-2. Each category must contain exactly 7 questions.
+2. Each category must contain exactly 5 questions.
 3. Questions must be directly tailored to THIS candidate's background and THIS specific role — not generic.
 4. strongResponseDescription: 2-4 sentences describing what a hiring manager wants to hear. Be specific to the role.
 5. keywordsAndThemes: 4-8 specific terms, phrases, or concepts the candidate should weave into their answer.
-6. Question IDs: use the format "B1"-"B7" for Behavioral, "T1"-"T7" for Technical, "L1"-"L7" for Leadership, "R1"-"R7" for Role-Specific, "C1"-"C7" for Culture Fit.
+6. Question IDs: use the format "B1"-"B5" for Behavioral, "T1"-"T5" for Technical, "L1"-"L5" for Leadership, "R1"-"R5" for Role-Specific, "C1"-"C5" for Culture Fit.
 7. If the company name is not identifiable from the job description, use "Target Company".
 8. If the role title is not identifiable, use "Target Role".
 9. If a hiring manager profile is provided: adjust question framing, tone, and emphasis to reflect that person's background, domain focus, and likely priorities.

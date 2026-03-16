@@ -30,6 +30,12 @@ export async function deleteSession(id) {
   return res.json();
 }
 
+export async function generateAnswer(sessionId, questionId) {
+  const res = await fetch(`/api/sessions/${sessionId}/answers/${questionId}`, { method: 'POST' });
+  await handleResponse(res);
+  return res.json(); // { answer }
+}
+
 export async function exportSession(sessionId, filename) {
   const res = await fetch('/api/export', {
     method: 'POST',
