@@ -35,11 +35,14 @@ export async function generateQuestions(resumeText, jdText, linkedInText, compan
 
   const response = await client.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 8192,
+    max_tokens: 16000,
     system,
     messages,
   });
 
   const text = response.content[0]?.text || '';
+  if (response.stop_reason === 'max_tokens') {
+    throw Object.assign(new Error('Response was too long and got cut off. Please try again.'), { status: 422 });
+  }
   return parseResponse(text);
 }

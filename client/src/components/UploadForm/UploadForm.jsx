@@ -13,8 +13,12 @@ export default function UploadForm() {
   const [company, setCompany] = useState('');
   const [linkedInText, setLinkedInText] = useState('');
   const [linkedInOpen, setLinkedInOpen] = useState(false);
+  const [linkedInMode, setLinkedInMode] = useState('text');
+  const [linkedInFile, setLinkedInFile] = useState(null);
   const [companyContext, setCompanyContext] = useState('');
   const [companyContextOpen, setCompanyContextOpen] = useState(false);
+  const [companyContextMode, setCompanyContextMode] = useState('text');
+  const [companyContextFile, setCompanyContextFile] = useState(null);
 
   async function submit(e) {
     e?.preventDefault();
@@ -32,8 +36,11 @@ export default function UploadForm() {
       fd.append('jobDescriptionText', jdText);
     }
 
-    if (companyContext.trim()) fd.append('companyContext', companyContext);
-    if (linkedInText.trim()) fd.append('linkedInText', linkedInText);
+    if (companyContextMode === 'file' && companyContextFile) fd.append('companyContextFile', companyContextFile);
+    else if (companyContext.trim()) fd.append('companyContext', companyContext);
+
+    if (linkedInMode === 'file' && linkedInFile) fd.append('linkedInFile', linkedInFile);
+    else if (linkedInText.trim()) fd.append('linkedInText', linkedInText);
     setLastFormData(fd);
 
     setGenerating(true);
@@ -153,14 +160,28 @@ export default function UploadForm() {
             {companyContextOpen && (
               <div className="collapsible-body">
                 <p className="collapsible-hint">
-                  Paste anything useful about the company — their mission, recent news, products, strategy, culture, or challenges. Claude will use this to sharpen Culture Fit and Role-Specific questions.
+                  Add anything useful about the company — mission, recent news, products, strategy, culture, or challenges. Claude will use this to sharpen Culture Fit and Role-Specific questions.
                 </p>
-                <textarea
-                  placeholder="e.g. Company mission, values, recent product launches, funding stage, known challenges..."
-                  value={companyContext}
-                  onChange={e => setCompanyContext(e.target.value)}
-                  rows={5}
-                />
+                <div className="jd-toggle" style={{marginBottom: '12px'}}>
+                  <button type="button" className={`jd-toggle-btn${companyContextMode === 'text' ? ' active' : ''}`} onClick={() => setCompanyContextMode('text')}>Paste Text</button>
+                  <button type="button" className={`jd-toggle-btn${companyContextMode === 'file' ? ' active' : ''}`} onClick={() => setCompanyContextMode('file')}>Upload PDF</button>
+                </div>
+                {companyContextMode === 'text' ? (
+                  <textarea
+                    placeholder="e.g. Company mission, values, recent product launches, funding stage, known challenges..."
+                    value={companyContext}
+                    onChange={e => setCompanyContext(e.target.value)}
+                    rows={5}
+                  />
+                ) : (
+                  <div className="file-input-wrapper">
+                    <label className={`file-input-label${companyContextFile ? ' has-file' : ''}`}>
+                      <span className="file-input-icon">{companyContextFile ? '✅' : '📎'}</span>
+                      <span className="file-input-text">{companyContextFile ? companyContextFile.name : 'Click to upload company context PDF'}</span>
+                      <input type="file" accept=".pdf" onChange={e => setCompanyContextFile(e.target.files[0] || null)} />
+                    </label>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -179,14 +200,28 @@ export default function UploadForm() {
             {linkedInOpen && (
               <div className="collapsible-body">
                 <p className="collapsible-hint">
-                  Open the hiring manager's LinkedIn profile, select all text on the page (Ctrl+A / Cmd+A), copy, and paste below. Claude will use their background to tailor question framing and emphasis.
+                  Add the hiring manager's profile. Claude will use their background to tailor question framing and emphasis.
                 </p>
-                <textarea
-                  placeholder="Paste LinkedIn profile text here..."
-                  value={linkedInText}
-                  onChange={e => setLinkedInText(e.target.value)}
-                  rows={5}
-                />
+                <div className="jd-toggle" style={{marginBottom: '12px'}}>
+                  <button type="button" className={`jd-toggle-btn${linkedInMode === 'text' ? ' active' : ''}`} onClick={() => setLinkedInMode('text')}>Paste Text</button>
+                  <button type="button" className={`jd-toggle-btn${linkedInMode === 'file' ? ' active' : ''}`} onClick={() => setLinkedInMode('file')}>Upload PDF</button>
+                </div>
+                {linkedInMode === 'text' ? (
+                  <textarea
+                    placeholder="Open the LinkedIn profile, select all (Ctrl+A / Cmd+A), copy, and paste here..."
+                    value={linkedInText}
+                    onChange={e => setLinkedInText(e.target.value)}
+                    rows={5}
+                  />
+                ) : (
+                  <div className="file-input-wrapper">
+                    <label className={`file-input-label${linkedInFile ? ' has-file' : ''}`}>
+                      <span className="file-input-icon">{linkedInFile ? '✅' : '📎'}</span>
+                      <span className="file-input-text">{linkedInFile ? linkedInFile.name : 'Click to upload hiring manager profile PDF'}</span>
+                      <input type="file" accept=".pdf" onChange={e => setLinkedInFile(e.target.files[0] || null)} />
+                    </label>
+                  </div>
+                )}
               </div>
             )}
           </div>

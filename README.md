@@ -8,7 +8,8 @@ You provide two inputs: your resume (PDF) and a job description (pasted text or 
 
 - **35 tailored questions** generated from your actual resume and the specific job description — not generic templates
 - **Answer guides** for every question: what the hiring manager wants to hear + keywords to weave in
-- **Hiring manager context** — paste a LinkedIn profile to further personalize question framing and tone
+- **Company context** — paste or upload a PDF of company info (mission, values, news, culture) to sharpen Culture Fit and Role-Specific questions
+- **Hiring manager context** — paste or upload a PDF of the hiring manager's LinkedIn profile to personalize question framing and tone
 - **Session history** — sessions are saved locally so you can revisit prep for different roles
 - **Export to .docx** — download a formatted Word document with all questions and answer guides organized by category
 
@@ -56,11 +57,12 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 1. **Enter the role title and company** you're interviewing for (optional but improves output)
 2. **Upload your resume** as a PDF
 3. **Paste or upload** the job description
-4. Optionally expand **Add Hiring Manager Context** and paste the LinkedIn profile text of whoever is interviewing you — open their profile, select all, copy, paste
-5. Click **Generate** and wait ~30 seconds while Claude analyzes your inputs
-6. **Browse by category tab** — click any question to expand its answer guide
-7. Click **Export .docx** to download the full question bank as a formatted Word document
-8. Previous sessions appear in the left sidebar — click any to reload it, or start a new one
+4. Optionally expand **Add Company Context** and paste or upload a PDF with info about the company — mission, values, recent news, culture
+5. Optionally expand **Add Hiring Manager Context** and paste or upload a PDF of the hiring manager's LinkedIn profile — open their profile, select all, copy, paste (or save as PDF)
+6. Click **Generate** and wait ~30 seconds while Claude analyzes your inputs
+7. **Browse by category tab** — click any question to expand its answer guide
+8. Click **Export .docx** to download the full question bank as a formatted Word document
+9. Previous sessions appear in the left sidebar — click any to reload it, or start a new one
 
 ## Production Build
 
